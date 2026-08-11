@@ -3,44 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RMS Academy - Login</title>
+  <title>RMS Academy | Student Login</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="login-page">
-    <section class="login-card" aria-labelledby="login-title">
-      <div class="brand">
-        <div class="logo">R</div>
-        <div>
-          <h1 id="login-title">RMS Academy</h1>
-          <p>Student Portal</p>
-        </div>
-      </div>
-
-      <form id="loginForm" novalidate>
+  <main class="page">
+    <section class="card">
+      <div class="brand"><span class="logo">R</span><div><h1>RMS Academy</h1><p>Student Portal</p></div></div>
+      <div id="status" class="status" aria-live="polite"></div>
+      <form id="loginForm">
         <label for="username">Username</label>
-        <input id="username" name="username" type="text" placeholder="Enter username" autocomplete="username" required />
-
+        <input id="username" type="text" placeholder="Enter username" autocomplete="username" required />
         <label for="password">Password</label>
-        <div class="password-wrap">
-          <input id="password" name="password" type="password" placeholder="Enter password" autocomplete="current-password" required />
-          <button type="button" id="togglePassword" class="toggle-btn" aria-label="Show password">Show</button>
-        </div>
-
-        <p id="message" class="message" role="alert"></p>
-        <button class="login-btn" type="submit">Login</button>
+        <input id="password" type="password" placeholder="Enter password" autocomplete="current-password" required />
+        <button type="submit">Login</button>
       </form>
-
-      <div id="dashboard" class="dashboard hidden">
-        <h2>Login successful 🎉</h2>
-        <p>Welcome, <strong id="loggedInUser"></strong>!</p>
-        <button id="logoutBtn" class="logout-btn">Logout</button>
-      </div>
-
-      <p class="demo-note">Demo login: <strong>admin</strong> / <strong>admin123</strong></p>
+      <section id="dashboard" class="dashboard hidden">
+        <h2>Welcome! 🎉</h2>
+        <p>You are logged in as <strong id="userName"></strong>.</p>
+        <div class="info"><span>Role</span><strong id="userRole">-</strong></div>
+        <div class="info"><span>API Status</span><strong id="apiStatus">Connected</strong></div>
+        <button id="logout" class="secondary">Logout</button>
+      </section>
+      <p class="demo">Demo account: <b>admin</b> / <b>admin123</b></p>
     </section>
   </main>
-
   <script src="script.js"></script>
 </body>
 </html>
