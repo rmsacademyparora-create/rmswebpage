@@ -1,55 +1,43 @@
+const API_BASE_URL = window.API_BASE_URL || '';
 const form = document.getElementById('loginForm');
-const usernameInput = document.getElementById('username');
-const passwordInput = document.getElementById('password');
-const message = document.getElementById('message');
+const statusBox = document.getElementById('status');
 const dashboard = document.getElementById('dashboard');
-const loggedInUser = document.getElementById('loggedInUser');
-const logoutBtn = document.getElementById('logoutBtn');
-const togglePassword = document.getElementById('togglePassword');
+const userName = document.getElementById('userName');
+const userRole = document.getElementById('userRole');
+const apiStatus = document.getElementById('apiStatus');
+const logout = document.getElementById('logout');
 
-const DEMO_USERNAME = 'admin';
-const DEMO_PASSWORD = 'admin123';
-
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
-  message.textContent = '';
+  statusBox.textContent = '';
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
 
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value;
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Login failed');
 
-  if (!username || !password) {
-    message.textContent = 'Please enter username and password.';
-    return;
-  }
-
-  if (username === DEMO_USERNAME && password === DEMO_PASSWORD) {
-    loggedInUser.textContent = username;
+    localStorage.setItem('rmsToken', data.token);
+    userName.textContent = data.user.name;
+    userRole.textContent = data.user.role;
+    apiStatus.textContent = 'Connected';
     form.classList.add('hidden');
     dashboard.classList.remove('hidden');
-    localStorage.setItem('loginUser', username);
-  } else {
-    message.textContent = 'Invalid username or password.';
+  } catch (error) {
+    apiStatus.textContent = 'Offline';
+    statusBox.textContent = error.message || 'Backend is not running.';
   }
 });
 
-togglePassword.addEventListener('click', () => {
-  const isPassword = passwordInput.type === 'password';
-  passwordInput.type = isPassword ? 'text' : 'password';
-  togglePassword.textContent = isPassword ? 'Hide' : 'Show';
-  togglePassword.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
-});
-
-logoutBtn.addEventListener('click', () => {
-  localStorage.removeItem('loginUser');
+logout.addEventListener('click', () => {
+  localStorage.removeItem('rmsToken');
   dashboard.classList.add('hidden');
   form.classList.remove('hidden');
   form.reset();
-  message.textContent = '';
+  statusBox.textContent = '';
 });
-
-const savedUser = localStorage.getItem('loginUser');
-if (savedUser) {
-  loggedInUser.textContent = savedUser;
-  form.classList.add('hidden');
-  dashboard.classList.remove('hidden');
-}
